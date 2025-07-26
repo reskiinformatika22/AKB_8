@@ -1,93 +1,117 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+// app/index.tsx
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-export default function Index() {
+// 🔡 Daftar nama lengkap beserta stambuk
+const daftarNama = [
+  "Fauzan Azhari Rahman (105841109622)",
+  "Muh. Fadhil Aahmad (105841109722)",
+  "Dayang Aisyah (105841109822)",
+  "Ilfauza Febrianty Faisal (105841110222)",
+  "Sa'ban (105841110322)",
+  "Nur Fadillah Sari (105841110422)",  // posisi target
+  "Wa Nanda Sulystrian (105841110622)",
+  "Muh. Tegar Al Fikri (105841110722)",
+  "Rayhanatul Jannah (105841110822)",
+  "Hanna Maryam (105841110922)",
+  "Afifah Auliyah (105841111022)"
+];
+
+// 🎯 Posisi stambuk utama
+const posisiUtama = 5;
+const jumlahNama = daftarNama.length;
+
+// ⏪ Ambil 5 nama sebelum (dengan wrap-around jika perlu)
+const namaSebelum = [];
+for (let i = 5; i >= 1; i--) {
+  const idx = (posisiUtama - i + jumlahNama) % jumlahNama;
+  namaSebelum.push(daftarNama[idx]);
+}
+
+// ⏩ Ambil 5 nama setelah
+const namaSetelah = [];
+for (let i = 1; i <= 5; i++) {
+  const idx = (posisiUtama + i) % jumlahNama;
+  namaSetelah.push(daftarNama[idx]);
+}
+
+// 📜 Gabungkan semua nama
+const daftarFinal = [...namaSebelum, daftarNama[posisiUtama], ...namaSetelah];
+
+// 🧬 Daftar font berbeda
+const jenisFont = [
+  "AbrilFatface-Regular",
+  "BowlbyOne-Regular",
+  "Michroma-Regular",
+  "Play-Regular",
+  "Shojumaru-Regular",
+  "Montserrat-Variable",
+  "Raleway-Variable",
+  "Roboto-Variable",
+  "Rubik-Variable",
+  "TikTokSans-Variable"
+];
+
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      {/* Box Hitam */}
-      <View style={styles.blackBox}>
-        <Text style={styles.name}>Rezki Asriani</Text>
-        <Text style={styles.id}>105841111522</Text>
-      </View>
+    <ScrollView contentContainerStyle={gayaUtama.kontainer}>
+      <Text style={gayaUtama.judul}>📘 10 Nama Berdasarkan Urutan Stambuk</Text>
 
-        {/* Persegi Panjang berisi gambar apel */}
-      <View style={styles.rectangle}>
-        <Image
-          source={{ uri: "https://tse2.mm.bing.net/th/id/OIP.51kHRYwt0TE1fkW0NMn3eAHaFO?pid=Api&P=0&h=180" }}
-          style={styles.image}
-        />
-      </View>
+      {daftarFinal.map((itemNama, urutan) => {
+        const sorot = itemNama.includes("Nur Fadillah Sari");
 
-      {/* Segitiga */}
-      <View style={styles.triangle}></View>
-
-      {/* Pill berisi icon dan teks di tengah */}
-      <View style={styles.pill}>
-        <Text style={styles.pillText}>🎓</Text>
-        <Text style={styles.pillText}>105841112122</Text>
-      </View>
-    </View>
+        return (
+          <View key={urutan} style={gayaUtama.kartu}>
+            <Text
+              style={[
+                gayaUtama.teksNama,
+                {
+                  fontFamily: jenisFont[urutan],
+                  fontWeight: sorot ? "bold" : "normal",
+                  color: sorot ? "#e63946" : "#2d2d2d"
+                }
+              ]}
+            >
+              {itemNama}
+            </Text>
+            <Text style={gayaUtama.labelFont}>Font yang digunakan: {jenisFont[urutan]}</Text>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
-    backgroundColor: "#F5F5F5",
-  },
-  blackBox: {
-    backgroundColor: "black",
-    borderRadius: 10,
-    padding: 10,
-    alignItems: "center",
-  },
-  name: {
-    color: "red",
-    fontSize: 25,
-  },
-  id: {
-    fontWeight: "bold",
-    color: "white",
-  },
-  rectangle: {
-    width: 200,
-    height: 100,
-    backgroundColor: "#ddd",
-    borderRadius: 10,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 40,
-    borderRightWidth: 40,
-    borderBottomWidth: 60,
-    borderStyle: "solid",
-    backgroundColor: "transparent",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "yellow",
-  },
-  pill: {
-    backgroundColor: "purple",
-    paddingVertical: 10,
+// 🎨 Gaya tampilan komponen
+const gayaUtama = StyleSheet.create({
+  kontainer: {
+    paddingVertical: 36,
     paddingHorizontal: 20,
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#f1f3f5"
   },
-  pillText: {
-    fontSize: 16,
-    color: "white",
+  judul: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 28,
     textAlign: "center",
+    color: "#003049"
   },
+  kartu: {
+    backgroundColor: "#ffffff",
+    padding: 18,
+    borderRadius: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+    elevation: 4,
+    marginBottom: 20
+  },
+  teksNama: {
+    fontSize: 20
+  },
+  labelFont: {
+    fontSize: 12,
+    color: "#6c757d",
+    marginTop: 5
+  }
 });
